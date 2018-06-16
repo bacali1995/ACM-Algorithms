@@ -1,55 +1,138 @@
 package com.eniso.acm.OtherCodes;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.math.BigInteger;
-import java.util.StringTokenizer;
+import java.io.*;
 
 public class FastScanner {
-    BufferedReader br;
-    StringTokenizer st;
+
+    final private int BUFFER_SIZE = 1 << 16;
+    private DataInputStream din;
+    private byte[] buffer;
+    private String[] stringBuffer;
+    private int bufferPointer, bytesRead, stringPointer;
 
     public FastScanner(InputStream inputStream) {
-        br = new BufferedReader(new InputStreamReader(inputStream));
+        din = new DataInputStream(inputStream);
+        buffer = new byte[BUFFER_SIZE];
+        stringBuffer = new String[0];
+        stringPointer = bufferPointer = bytesRead = 0;
     }
 
     public String next() {
-        while (st == null || !st.hasMoreElements()) {
-            try {
-                st = new StringTokenizer(br.readLine());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (stringPointer == stringBuffer.length) {
+            nextLine();
+            stringPointer = 0;
         }
-        return st.nextToken();
-    }
-
-    public int nextInt() {
-        return Integer.parseInt(next());
-    }
-
-    public long nextLong() {
-        return Long.parseLong(next());
-    }
-
-    public double nextDouble() {
-        return Double.parseDouble(next());
+        return stringBuffer[stringPointer++];
     }
 
     public String nextLine() {
-        String str = "";
+        byte[] buf = new byte[1 << 16];
+        int cnt = 0, c;
+        while ((c = read()) != -1) {
+            if (c == '\n') {
+                break;
+            }
+            buf[cnt++] = (byte) c;
+        }
+        String result = new String(buf, 0, cnt);
+        stringBuffer = result.trim().split(" ");
+        stringPointer = stringBuffer.length;
+        return result;
+    }
+
+    public int nextInt() {
+        int ret = 0;
+        byte c = read();
+        while (c <= ' ') {
+            c = read();
+        }
+        boolean neg = (c == '-');
+        if (neg) {
+            c = read();
+        }
+        do {
+            ret = ret * 10 + c - '0';
+        } while ((c = read()) >= '0' && c <= '9');
+
+        if (neg) {
+            return -ret;
+        }
+        return ret;
+    }
+
+    public long nextLong() {
+        long ret = 0;
+        byte c = read();
+        while (c <= ' ') {
+            c = read();
+        }
+        boolean neg = (c == '-');
+        if (neg) {
+            c = read();
+        }
+        do {
+            ret = ret * 10 + c - '0';
+        } while ((c = read()) >= '0' && c <= '9');
+        if (neg) {
+            return -ret;
+        }
+        return ret;
+    }
+
+    public double nextDouble() {
+        double ret = 0, div = 1;
+        byte c = read();
+        while (c <= ' ') {
+            c = read();
+        }
+        boolean neg = (c == '-');
+        if (neg) {
+            c = read();
+        }
+
+        do {
+            ret = ret * 10 + c - '0';
+        } while ((c = read()) >= '0' && c <= '9');
+
+        if (c == '.') {
+            while ((c = read()) >= '0' && c <= '9') {
+                ret += (c - '0') / (div *= 10);
+            }
+        }
+
+        if (neg) {
+            return -ret;
+        }
+        return ret;
+    }
+
+    private void fillBuffer() {
         try {
-            str = br.readLine();
+            bytesRead = din.read(buffer, bufferPointer = 0, BUFFER_SIZE);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return str;
+        if (bytesRead == -1) {
+            buffer[0] = -1;
+        }
     }
-    
-    public BigInteger nextBigInteger(){
-        return BigInteger.valueOf(nextLong());
+
+    private byte read() {
+        if (bufferPointer == bytesRead) {
+            fillBuffer();
+        }
+        return buffer[bufferPointer++];
+    }
+
+    public void close() {
+        if (din == null) {
+            return;
+        }
+        try {
+            din.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public int[] nextIntArray(int n) {
@@ -60,11 +143,12 @@ public class FastScanner {
         return tab;
     }
 
-    public long[] nextLongArray(int n) {
+    long[] nextLongArray(int n) {
         long[] tab = new long[n];
         for (int i = 0; i < n; i++) {
             tab[i] = nextLong();
         }
         return tab;
     }
+
 }
