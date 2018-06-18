@@ -44,27 +44,36 @@ public class GoodMethods {
         }
         return l;
     }
-
-    public static List<int[]> list = new LinkedList<>();
-
-    public static void Permute(int[] input, int startindex) {
-        int size = input.length;
-        if (size == startindex + 1) {
-            int[] tab = new int[size];
-            for (int i = 0; i < tab.length; i++) {
-                tab[i] = input[i];
+    private void nextPermutation(int[] num) {
+        if (num.length == 0) return;
+        int length = num.length;
+        int end = length - 1;
+        int i = end - 1;
+        for (; i >= 0; i--) {
+            if (num[i] >= num[i + 1]) continue; //get an increasing set from the end
+            int j = end;
+            while (j != i) {
+                if (num[j] > num[i]) {
+                    int temp = num[i];
+                    num[i] = num[j];
+                    num[j] = temp;
+                    break;
+                }
+                j--;
             }
-            list.add(tab);
-        } else {
-            for (int i = startindex; i < size; i++) {
-                int temp = input[i];
-                input[i] = input[startindex];
-                input[startindex] = temp;
-                Permute(input, startindex + 1);
-                int temp2 = input[i];
-                input[i] = input[startindex];
-                input[startindex] = temp2;
-            }
+            break;
+        }
+        reverse(num, i + 1, end);
+    }
+
+    private void reverse(int[] num, int start, int end) {
+        while (start < end) {
+            int temp;
+            temp = num[start];
+            num[start] = num[end];
+            num[end] = temp;
+            start++;
+            end--;
         }
     }
 

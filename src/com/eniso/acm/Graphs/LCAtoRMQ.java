@@ -2,7 +2,7 @@ package com.eniso.acm.Graphs;
 
 import java.io.*;
 import java.util.*;
-import com.eniso.acm.OtherCodes.FastScanner;
+import com.eniso.acm.OtherCodes.FastScanner2;
 
 public class LCAtoRMQ {
 
@@ -86,14 +86,14 @@ public class LCAtoRMQ {
     public static void main(String[] args) {
         InputStream inputStream = System.in;
         OutputStream outputStream = System.out;
-        FastScanner in = new FastScanner(inputStream);
+        FastScanner2 in = new FastScanner2(inputStream);
         PrintWriter out = new PrintWriter(outputStream);
         LCAtoRMQ solver = new LCAtoRMQ();
         solver.solve(1, in, out);
         out.close();
     }
 
-    public void solve(int testNumber, FastScanner in, PrintWriter out) {
+    public void solve(int testNumber, FastScanner2 in, PrintWriter out) {
         int t = in.nextInt();
         for (int i = 0; i < t; i++) {
             int n = in.nextInt();

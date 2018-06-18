@@ -270,7 +270,7 @@ public class CycleTreePath {
         return Math.min(x, len - x);
     }
 
-    private void labelCycle(long k, long c, long d, long cnum) {
+     private void labelCycle(long k, long c, long d, long cnum) {
         final long k0 = k, c0 = c;
         long klen = 0;
         long clen = 0;
@@ -322,7 +322,7 @@ public class CycleTreePath {
         }
 
     }
-
+    
     public void solve(int testNumber, FastScanner in, PrintWriter out) {
         int t = in.nextInt();
         for (int j = 0; j < t; j++) {
